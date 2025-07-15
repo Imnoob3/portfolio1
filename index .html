@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Portfolio</title>
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/scrollreveal"></script>
+  <script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12"></script>
+</head>
+<body>
+  <div class="theme-switch-wrapper">
+    <label class="theme-switch" for="darkModeToggle">
+        <input type="checkbox" id="darkModeToggle" />
+        <span class="slider"></span>
+    </label>
+  </div>
+
+  <header>
+    <h1>Hi, I'm Samip Chapagain </h1>
+    <p>Web Developer & Designer</p>
+  </header>
+
+  <nav class="main-nav">
+    <div class="nav-links">
+        <a href="index.html" class="nav-item active">Home</a>
+        <a href="support.html" class="nav-item">Support</a>
+    </div>
+  </nav>
+
+  <section class="about">
+    <h2>About Me</h2>
+    <p>I'm a <span class="typing"></span></p>
+  </section>
+
+  <section class="projects">
+    <h2>My Work</h2>
+    <div class="project-card">
+      <h3>Project Title</h3>
+      <p>Description of your awesome project.</p>
+    </div>
+    <div class="project-card">
+      <h3>Another Project</h3>
+      <p>Another cool thing you built.</p>
+    </div>
+  </section>
+
+  <section class="contact">
+    <h2>Contact Me</h2>
+    <form id="contactForm">
+        <div class="form-group">
+            <input type="text" id="name" name="name" placeholder="Your Name" required />
+            <span class="form-error" id="nameError"></span>
+        </div>
+        <div class="form-group">
+            <input type="email" id="email" name="email" placeholder="Your Email" required />
+            <span class="form-error" id="emailError"></span>
+        </div>
+        <div class="form-group">
+            <textarea id="message" name="message" placeholder="Your Message" required></textarea>
+            <span class="form-error" id="messageError"></span>
+        </div>
+        <button type="submit" class="submit-btn">
+            <i class="fas fa-paper-plane"></i> Send Message
+        </button>
+    </form>
+  </section>
+
+  <footer>
+    <div class="social-links">
+        <a href="https://youtube.com/@yourchannel" target="_blank" class="social-icon youtube">
+            <i class="fab fa-youtube fa-2x"></i>
+            <span class="social-name">YouTube</span>
+        </a>
+        <a href="https://tiktok.com/@yourusername" target="_blank" class="social-icon tiktok">
+            <i class="fab fa-tiktok fa-2x"></i>
+            <span class="social-name">TikTok</span>
+        </a>
+        <a href="https://facebook.com/yourprofile" target="_blank" class="social-icon facebook">
+            <i class="fab fa-facebook fa-2x"></i>
+            <span class="social-name">Facebook</span>
+        </a>
+    </div>
+    <p>&copy; 2025 Samip Chapagain. All rights reserved.</p>
+  </footer>
+
+  <script src="Samip.js"></script>
+  <script>
+    document.getElementById('contactForm').addEventListener('submit', handleSubmit);
+
+    async function handleSubmit(event) {
+        event.preventDefault();
+        
+        if (!validateForm()) return;
+
+        const formData = {
+            name: document.getElementById('name').value,
+            email: document.getElementById('email').value,
+            message: document.getElementById('message').value
+        };
+
+        try {
+            const response = await fetch('http://localhost:3000/api/contact', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formData)
+            });
+
+            const data = await response.json();
+            
+            if (response.ok) {
+                showSuccessMessage('Message sent successfully!');
+                event.target.reset();
+            } else {
+                showErrorMessage('Failed to send message. Please try again.');
+            }
+        } catch (error) {
+            showErrorMessage('An error occurred. Please try again later.');
+        }
+    }
+
+    function showSuccessMessage(message) {
+        const messageDiv = document.createElement('div');
+        messageDiv.className = 'success-message';
+        messageDiv.textContent = message;
+        document.querySelector('.contact').appendChild(messageDiv);
+        setTimeout(() => messageDiv.remove(), 5000);
+    }
+
+    function showErrorMessage(message) {
+        const messageDiv = document.createElement('div');
+        messageDiv.className = 'error-message';
+        messageDiv.textContent = message;
+        document.querySelector('.contact').appendChild(messageDiv);
+        setTimeout(() => messageDiv.remove(), 5000);
+    }
+  </script>
+</body>
+</html>

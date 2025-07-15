@@ -1,0 +1,166 @@
+/* Support Page Styles */
+:root {
+    --support-gradient: linear-gradient(135deg, #4CAF50, #2196F3);
+    --card-hover-transform: translateY(-5px);
+}
+
+.support-header {
+    text-align: center;
+    padding: 6rem 2rem 4rem;
+    background: var(--support-gradient);
+    color: white;
+    clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);
+}
+
+.support-header h1 {
+    font-size: var(--huge-font);
+    margin-bottom: 1rem;
+    animation: fadeInDown 1s ease;
+}
+
+.support-header p {
+    font-size: var(--h3-font);
+    opacity: 0.9;
+    max-width: 600px;
+    margin: 0 auto;
+    animation: fadeInUp 1s ease 0.3s backwards;
+}
+
+.support-options {
+    padding: 4rem 2rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.support-card {
+    background: white;
+    padding: 2rem;
+    border-radius: 15px;
+    box-shadow: var(--card-shadow);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.support-card:hover {
+    transform: var(--card-hover-transform);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+}
+
+.support-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 5px;
+    background: var(--support-gradient);
+}
+
+.support-card h3 {
+    font-size: var(--h2-font);
+    margin-bottom: 1rem;
+    color: var(--primary-color);
+}
+
+.support-card p {
+    color: #666;
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+}
+
+.ad-section {
+    background: #f9f9f9;
+    padding: 4rem 2rem;
+    text-align: center;
+}
+
+.ad-container {
+    max-width: 728px;
+    margin: 2rem auto;
+    background: white;
+    padding: 2rem;
+    border-radius: 15px;
+    box-shadow: var(--card-shadow);
+    transition: all 0.3s ease;
+}
+
+.ad-container:hover {
+    transform: var(--card-hover-transform);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+}
+
+.thank-you-message {
+    max-width: 600px;
+    margin: 3rem auto;
+    padding: 2rem;
+    background: white;
+    border-radius: 15px;
+    box-shadow: var(--card-shadow);
+    text-align: center;
+    animation: fadeInUp 1s ease;
+}
+
+.thank-you-message h3 {
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+}
+
+/* Dark Mode Styles */
+body.dark-mode .support-card,
+body.dark-mode .ad-container,
+body.dark-mode .thank-you-message {
+    background: #2a2a2a;
+    color: white;
+}
+
+body.dark-mode .support-card p {
+    color: #ccc;
+}
+
+/* Animations */
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .support-header {
+        padding: 4rem 1rem 3rem;
+    }
+
+    .support-header h1 {
+        font-size: var(--h1-font);
+    }
+
+    .support-options {
+        padding: 2rem 1rem;
+        grid-template-columns: 1fr;
+    }
+
+    .support-card {
+        padding: 1.5rem;
+    }
+}
+
