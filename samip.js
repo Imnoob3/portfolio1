@@ -127,3 +127,4 @@ function showErrorMessage(message) {
     document.querySelector('.contact').appendChild(messageDiv);
     setTimeout(() => messageDiv.remove(), 5000);
 }
+

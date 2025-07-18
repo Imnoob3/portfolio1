@@ -3,6 +3,28 @@
     --support-gradient: linear-gradient(135deg, #4CAF50, #2196F3);
     --card-hover-transform: translateY(-5px);
 }
+/* Navigation Hover Effects */
+.nav-item {
+    position: relative;
+    padding: 0.5rem 1rem;
+    transition: all 0.3s ease;
+}
+
+.nav-item::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: 0;
+    left: 50%;
+    background: var(--primary-color);
+    transition: all 0.3s ease;
+}
+
+.nav-item:hover::after {
+    width: 100%;
+    left: 0;
+}
 
 .support-header {
     text-align: center;
