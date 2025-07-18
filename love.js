@@ -64,6 +64,7 @@ function calculateLove(name1, name2) {
     // Extended special combinations
     const specialScores = {
         'saroj:sabina':100,
+        'saroj:manisha':0,
     };
 
     // Check both combinations
