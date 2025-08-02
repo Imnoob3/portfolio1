@@ -1,92 +1,94 @@
-// Dark Mode Toggle
+// ===== DOM ELEMENTS =====
 const toggleSwitch = document.getElementById('darkModeToggle');
+const contactForm = document.getElementById('contactForm');
 
-// Check for saved theme preference
-const currentTheme = localStorage.getItem('theme');
-if (currentTheme) {
+// ===== THEME MANAGEMENT =====
+function initTheme() {
+    const currentTheme = localStorage.getItem('theme') || 'light';
     document.body.classList.toggle('dark-mode', currentTheme === 'dark');
     toggleSwitch.checked = currentTheme === 'dark';
 }
 
-toggleSwitch.addEventListener('change', function(e) {
-    if (e.target.checked) {
-        document.body.classList.add('dark-mode');
-        localStorage.setItem('theme', 'dark');
-    } else {
-        document.body.classList.remove('dark-mode');
-        localStorage.setItem('theme', 'light');
+function toggleTheme() {
+    const isDark = toggleSwitch.checked;
+    document.body.classList.toggle('dark-mode', isDark);
+    localStorage.setItem('theme', isDark ? 'dark' : 'light');
+}
+
+// ===== ANIMATIONS =====
+function initAnimations() {
+    if (typeof ScrollReveal !== 'undefined') {
+        const sr = ScrollReveal({
+            origin: 'bottom',
+            distance: '30px',
+            duration: 1000,
+            delay: 200,
+            reset: false
+        });
+
+        sr.reveal('header', { delay: 300 });
+        sr.reveal('.about', { delay: 400 });
+        sr.reveal('.projects', { delay: 500 });
+        sr.reveal('.project-card', { interval: 200 });
+        sr.reveal('.contact', { delay: 600 });
+        sr.reveal('footer', { delay: 700 });
     }
-});
+}
 
-// Scroll Reveal Animations
-const sr = ScrollReveal({
-  origin: 'bottom',
-  distance: '30px',
-  duration: 1000,
-  delay: 200,
-  reset: false
-});
+// ===== TYPING ANIMATION =====
+function initTypingAnimation() {
+    if (typeof Typed !== 'undefined') {
+        new Typed('.typing', {
+            strings: ['Web Developer', 'Designer', 'Freelancer', 'Student', 'YouTuber'],
+            typeSpeed: 100,
+            backSpeed: 60,
+            loop: true
+        });
+    }
+}
 
-sr.reveal('header', { delay: 300 });
-sr.reveal('.about', { delay: 400 });
-sr.reveal('.projects', { delay: 500 });
-sr.reveal('.project-card', { interval: 200 });
-sr.reveal('.contact', { delay: 600 });
-sr.reveal('footer', { delay: 700 });
-
-// Typing Animation
-const typed = new Typed('.typing', {
-    strings: ['Web Developer', 'Designer', 'Freelancer', 'Student' ,'youtuber'],
-    typeSpeed: 100,
-    backSpeed: 60,
-    loop: true
-});
-
-// Form Validation
+// ===== FORM VALIDATION =====
 function validateForm() {
     let isValid = true;
-    const name = document.getElementById('name').value;
-    const email = document.getElementById('email').value;
-    const message = document.getElementById('message').value;
+    const fields = {
+        name: { element: document.getElementById('name'), minLength: 2 },
+        email: { element: document.getElementById('email'), pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/ },
+        message: { element: document.getElementById('message'), minLength: 10 }
+    };
 
-    // Name validation
-    if (name.length < 2) {
-        document.getElementById('nameError').textContent = 'Name must be at least 2 characters';
-        isValid = false;
-    } else {
-        document.getElementById('nameError').textContent = '';
-    }
+    // Clear previous errors
+    Object.values(fields).forEach(field => {
+        const errorElement = document.getElementById(field.element.id + 'Error');
+        if (errorElement) errorElement.textContent = '';
+    });
 
-    // Email validation
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-        document.getElementById('emailError').textContent = 'Please enter a valid email';
-        isValid = false;
-    } else {
-        document.getElementById('emailError').textContent = '';
-    }
+    // Validate each field
+    Object.entries(fields).forEach(([fieldName, field]) => {
+        const value = field.element.value.trim();
+        const errorElement = document.getElementById(field.element.id + 'Error');
 
-    // Message validation
-    if (message.length < 10) {
-        document.getElementById('messageError').textContent = 'Message must be at least 10 characters';
-        isValid = false;
-    } else {
-        document.getElementById('messageError').textContent = '';
-    }
+        if (field.minLength && value.length < field.minLength) {
+            errorElement.textContent = `${fieldName.charAt(0).toUpperCase() + fieldName.slice(1)} must be at least ${field.minLength} characters`;
+            isValid = false;
+        } else if (field.pattern && !field.pattern.test(value)) {
+            errorElement.textContent = `Please enter a valid ${fieldName}`;
+            isValid = false;
+        }
+    });
 
     return isValid;
 }
 
-// Update the form's JavaScript in samip.js
-async function handleSubmit(event) {
+// ===== FORM SUBMISSION =====
+async function handleFormSubmit(event) {
     event.preventDefault();
     
     if (!validateForm()) return;
 
     const formData = {
-        name: document.getElementById('name').value,
-        email: document.getElementById('email').value,
-        message: document.getElementById('message').value
+        name: document.getElementById('name').value.trim(),
+        email: document.getElementById('email').value.trim(),
+        message: document.getElementById('message').value.trim()
     };
 
     try {
@@ -98,33 +100,126 @@ async function handleSubmit(event) {
             body: JSON.stringify(formData)
         });
 
-        const data = await response.json();
-        
         if (response.ok) {
-            showSuccessMessage('Message sent successfully!');
+            showMessage('Message sent successfully!', 'success');
             event.target.reset();
         } else {
-            showErrorMessage('Failed to send message. Please try again.');
+            showMessage('Failed to send message. Please try again.', 'error');
         }
     } catch (error) {
-        showErrorMessage('An error occurred. Please try again later.');
+        showMessage('An error occurred. Please try again later.', 'error');
     }
 }
 
-// Add these helper functions
-function showSuccessMessage(message) {
+// ===== MESSAGE DISPLAY =====
+function showMessage(message, type) {
     const messageDiv = document.createElement('div');
-    messageDiv.className = 'success-message';
+    messageDiv.className = `${type}-message`;
     messageDiv.textContent = message;
-    document.querySelector('.contact').appendChild(messageDiv);
-    setTimeout(() => messageDiv.remove(), 5000);
+    
+    const contactSection = document.querySelector('.contact');
+    contactSection.appendChild(messageDiv);
+    
+    setTimeout(() => {
+        messageDiv.remove();
+    }, 5000);
 }
 
-function showErrorMessage(message) {
-    const messageDiv = document.createElement('div');
-    messageDiv.className = 'error-message';
-    messageDiv.textContent = message;
-    document.querySelector('.contact').appendChild(messageDiv);
-    setTimeout(() => messageDiv.remove(), 5000);
+// ===== RESPONSIVE NAVIGATION =====
+function initResponsiveNav() {
+    const navItems = document.querySelectorAll('.nav-item');
+    
+    navItems.forEach(item => {
+        item.addEventListener('click', function() {
+            navItems.forEach(nav => nav.classList.remove('active'));
+            this.classList.add('active');
+        });
+    });
+}
+
+// ===== PERFORMANCE OPTIMIZATIONS =====
+function debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+        const later = () => {
+            clearTimeout(timeout);
+            func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+    };
+}
+
+// ===== ACCESSIBILITY =====
+function initAccessibility() {
+    // Add keyboard navigation support
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            // Close any open modals or dropdowns
+            const activeElements = document.querySelectorAll('.active');
+            activeElements.forEach(el => el.classList.remove('active'));
+        }
+    });
+
+    // Add focus management
+    const focusableElements = document.querySelectorAll('a, button, input, textarea, select');
+    focusableElements.forEach(el => {
+        el.addEventListener('focus', () => {
+            el.style.outline = '2px solid var(--primary-color)';
+            el.style.outlineOffset = '2px';
+        });
+        
+        el.addEventListener('blur', () => {
+            el.style.outline = '';
+            el.style.outlineOffset = '';
+        });
+    });
+}
+
+// ===== INITIALIZATION =====
+function init() {
+    // Initialize theme
+    initTheme();
+    
+    // Add event listeners
+    toggleSwitch.addEventListener('change', toggleTheme);
+    contactForm.addEventListener('submit', handleFormSubmit);
+    
+    // Initialize animations
+    initAnimations();
+    initTypingAnimation();
+    
+    // Initialize responsive navigation
+    initResponsiveNav();
+    
+    // Initialize accessibility features
+    initAccessibility();
+    
+    // Add smooth scrolling for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                target.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+        });
+    });
+}
+
+// ===== LOAD EVENT =====
+document.addEventListener('DOMContentLoaded', init);
+
+// ===== EXPORT FOR TESTING =====
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = {
+        validateForm,
+        handleFormSubmit,
+        showMessage,
+        toggleTheme
+    };
 }
 

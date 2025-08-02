@@ -1,155 +1,327 @@
-// filepath: c:\Users\acer\Videos\code\lovre calc\script.js
-// Scroll reveal animation
-ScrollReveal().reveal('.reveal', {
-    delay: 200,
-    distance: '50px',
-    duration: 1000,
-    origin: 'bottom',
-    opacity: 0,
-    reset: true,
-    viewFactor: 0.2
-});
+// ===== LOVE CALCULATOR FUNCTIONALITY =====
 
-// Love Calculator functionality
-document.getElementById('love-calc-form').addEventListener('submit', function(e) {
-    e.preventDefault();
+// DOM Elements
+const loveForm = document.getElementById('love-calc-form');
+const resultDiv = document.getElementById('result');
+const loveScore = document.getElementById('love-score');
+const heartAnimation = document.getElementById('heart-animation');
+
+// ===== LOVE CALCULATION LOGIC =====
+function calculateLoveScore(name1, name2) {
+    // Simple but fun love calculation algorithm
+    const combinedNames = (name1 + name2).toLowerCase();
+    let score = 0;
     
-    // Get the names
-    const name1 = document.getElementById('name1').value.trim();
-    const name2 = document.getElementById('name2').value.trim();
+    // Base score from name length
+    score += (name1.length + name2.length) * 2;
     
-    // Validate inputs
+    // Add points for matching letters
+    const name1Letters = name1.toLowerCase().split('');
+    const name2Letters = name2.toLowerCase().split('');
+    
+    name1Letters.forEach(letter => {
+        if (name2Letters.includes(letter)) {
+            score += 10;
+        }
+    });
+    
+    // Add points for vowels
+    const vowels = ['a', 'e', 'i', 'o', 'u'];
+    const vowelCount = combinedNames.split('').filter(char => vowels.includes(char)).length;
+    score += vowelCount * 5;
+    
+    // Add points for love-related letters
+    const loveLetters = ['l', 'o', 'v', 'e'];
+    const loveLetterCount = combinedNames.split('').filter(char => loveLetters.includes(char)).length;
+    score += loveLetterCount * 15;
+    
+    // Ensure score is between 0 and 100
+    score = Math.min(100, Math.max(0, score));
+    
+    return score;
+}
+
+// ===== LOADING ANIMATION =====
+function showLoadingAnimation() {
+    // Create loading overlay
+    const loadingOverlay = document.createElement('div');
+    loadingOverlay.id = 'loading-overlay';
+    loadingOverlay.innerHTML = `
+        <div class="loading-content">
+            <div class="loading-hearts">
+                <span>💕</span>
+                <span>💖</span>
+                <span>💗</span>
+                <span>💓</span>
+                <span>💝</span>
+            </div>
+            <h3>Calculating Love...</h3>
+            <p>Analyzing compatibility between ${document.getElementById('name1').value} and ${document.getElementById('name2').value}</p>
+            <div class="loading-bar">
+                <div class="loading-progress"></div>
+            </div>
+        </div>
+    `;
+    document.body.appendChild(loadingOverlay);
+    
+    // Start progress animation
+    const progress = loadingOverlay.querySelector('.loading-progress');
+    let width = 0;
+    const interval = setInterval(() => {
+        if (width >= 100) {
+            clearInterval(interval);
+        } else {
+            width += 1.4; // Takes 7 seconds to complete
+            progress.style.width = width + '%';
+        }
+    }, 100);
+}
+
+function hideLoadingAnimation() {
+    const loadingOverlay = document.getElementById('loading-overlay');
+    if (loadingOverlay) {
+        loadingOverlay.style.opacity = '0';
+        setTimeout(() => {
+            loadingOverlay.remove();
+        }, 500);
+    }
+}
+
+// ===== ANIMATION FUNCTIONS =====
+function createSnowflakes() {
+    const snowContainer = document.querySelector('.snow-container');
+    if (!snowContainer) return;
+    
+    const snowflakes = ['❄', '❅', '❆', '✻', '✼', '❉', '❊', '❋'];
+    
+    setInterval(() => {
+        const snowflake = document.createElement('div');
+        snowflake.className = 'snowflake';
+        snowflake.textContent = snowflakes[Math.floor(Math.random() * snowflakes.length)];
+        snowflake.style.left = Math.random() * 100 + '%';
+        snowflake.style.animationDuration = (Math.random() * 3 + 2) + 's';
+        snowflake.style.opacity = Math.random();
+        snowflake.style.fontSize = (Math.random() * 10 + 10) + 'px';
+        
+        snowContainer.appendChild(snowflake);
+        
+        // Remove snowflake after animation
+        setTimeout(() => {
+            if (snowflake.parentNode) {
+                snowflake.parentNode.removeChild(snowflake);
+            }
+        }, 5000);
+    }, 300);
+}
+
+function createFloatingHearts() {
+    const hearts = ['❤️', '💖', '💕', '💗', '💓', '💝'];
+    
+    setInterval(() => {
+        const heart = document.createElement('div');
+        heart.className = 'floating-heart';
+        heart.textContent = hearts[Math.floor(Math.random() * hearts.length)];
+        heart.style.left = Math.random() * 100 + '%';
+        heart.style.animationDuration = (Math.random() * 3 + 2) + 's';
+        heart.style.fontSize = (Math.random() * 20 + 15) + 'px';
+        
+        document.body.appendChild(heart);
+        
+        // Remove heart after animation
+        setTimeout(() => {
+            if (heart.parentNode) {
+                heart.parentNode.removeChild(heart);
+            }
+        }, 5000);
+    }, 2000);
+}
+
+function showHeartAnimation() {
+    if (heartAnimation) {
+        heartAnimation.classList.remove('hidden');
+        
+        // Hide animation after 3 seconds
+        setTimeout(() => {
+            heartAnimation.classList.add('hidden');
+        }, 3000);
+    }
+}
+
+// ===== RESULT DISPLAY =====
+function displayResult(score, name1, name2) {
+    const messages = {
+        high: ['Perfect Match! 💕', 'Soulmates! 💖', 'True Love! 💝'],
+        medium: ['Good Chemistry! 💗', 'Potential Love! 💓', 'Nice Match! 💕'],
+        low: ['Friendship Zone! 🤝', 'Room to Grow! 🌱', 'New Beginnings! 🌸']
+    };
+    
+    let category, message;
+    
+    if (score >= 80) {
+        category = 'high';
+        message = messages.high[Math.floor(Math.random() * messages.high.length)];
+    } else if (score >= 50) {
+        category = 'medium';
+        message = messages.medium[Math.floor(Math.random() * messages.medium.length)];
+    } else {
+        category = 'low';
+        message = messages.low[Math.floor(Math.random() * messages.low.length)];
+    }
+    
+    // Update result display
+    resultDiv.innerHTML = `
+        <h2>${message}</h2>
+        <div id="love-score">${score}%</div>
+        <p>${name1} + ${name2} = Love Score</p>
+    `;
+    
+    resultDiv.classList.remove('hidden');
+    
+    // Add show class for animation
+    setTimeout(() => {
+        resultDiv.classList.add('show');
+    }, 100);
+    
+    // Add celebration effects
+    showHeartAnimation();
+    createCelebrationHearts();
+}
+
+function createCelebrationHearts() {
+    const hearts = ['❤️', '💖', '💕', '💗', '💓', '💝'];
+    
+    for (let i = 0; i < 10; i++) {
+        setTimeout(() => {
+            const heart = document.createElement('div');
+            heart.className = 'floating-heart';
+            heart.textContent = hearts[Math.floor(Math.random() * hearts.length)];
+            heart.style.left = Math.random() * 100 + '%';
+            heart.style.top = Math.random() * 100 + '%';
+            heart.style.animationDuration = '2s';
+            heart.style.fontSize = '2rem';
+            
+            document.body.appendChild(heart);
+            
+            setTimeout(() => {
+                if (heart.parentNode) {
+                    heart.parentNode.removeChild(heart);
+                }
+            }, 2000);
+        }, i * 100);
+    }
+}
+
+// ===== FORM HANDLING =====
+function handleFormSubmit(event) {
+    event.preventDefault();
+    
+    const name1Input = document.getElementById('name1');
+    const name2Input = document.getElementById('name2');
+    const name1 = name1Input.value.trim();
+    const name2 = name2Input.value.trim();
+    
+    // Validation
     if (!name1 || !name2) {
-        alert('Please enter both names');
+        alert('Please enter both names!');
         return;
     }
     
-    // Calculate love percentage
-    const loveScore = calculateLove(name1, name2);
+    if (name1.length < 2 || name2.length < 2) {
+        alert('Please enter valid names (at least 2 characters)!');
+        return;
+    }
     
-    // Hide the form temporarily
-    this.style.display = 'none';
+    // Calculate love score
+    const score = calculateLoveScore(name1, name2);
     
-    // Show the animation
-    const heartAnimation = document.getElementById('heart-animation');
-    heartAnimation.classList.remove('hidden');
+    // Show loading animation
+    showLoadingAnimation();
     
-    // After 10 seconds, show the result
+    // Display result with 7-second delay
     setTimeout(() => {
-        // Hide animation
-        heartAnimation.classList.add('hidden');
-        
-        // Show form again
-        this.style.display = 'block';
-        
-        // Show result
-        const result = document.getElementById('result');
-        const loveScoreElement = document.getElementById('love-score');
-        const messageElement = document.createElement('p');
-        messageElement.className = 'love-message';
-        
-        result.classList.remove('hidden');
-        loveScoreElement.textContent = `${loveScore}%`;
-        messageElement.textContent = getLoveMessage(loveScore);
-        
-        // Add message after the score
-        result.appendChild(messageElement);
-    }, 10000);
-});
+        hideLoadingAnimation();
+        displayResult(score, name1, name2);
+    }, 7000);
+    
+    // Scroll to result
+    setTimeout(() => {
+        resultDiv.scrollIntoView({ behavior: 'smooth' });
+    }, 7500);
+}
 
-function calculateLove(name1, name2) {
-    const n1 = name1.toLowerCase();
-    const n2 = name2.toLowerCase();
+// ===== INITIALIZATION =====
+function initLoveCalculator() {
+    // Start background animations
+    createSnowflakes();
+    createFloatingHearts();
     
-    // Extended special combinations
-    const specialScores = {
-        'saroj:sabina':100,
-        'saroj:manisha':100,
-    };
-
-    // Check both combinations
-    const combo1 = `${n1}:${n2}`;
-    const combo2 = `${n2}:${n1}`;
-    
-    if (specialScores[combo1] !== undefined) return specialScores[combo1];
-    if (specialScores[combo2] !== undefined) return specialScores[combo2];
-    
-    // Add the missing algorithm for non-special combinations
-    const combined = n1 + n2;
-    let sum = 0;
-    for (let char of combined) {
-        sum += char.charCodeAt(0);
+    // Add form event listener
+    if (loveForm) {
+        loveForm.addEventListener('submit', handleFormSubmit);
     }
-    // Generate a score between 50-100
-    return Math.floor((sum % 51) + 50);
-}
-
-// Add this new function for love messages
-function getLoveMessage(score) {
-    if (score === 100) return "Perfect Match! Written in the stars! ⭐";
-    if (score >= 90) return "Amazing Chemistry! Love is in the air! 💖";
-    if (score >= 80) return "Great potential! Keep the spark alive! ✨";
-    if (score >= 70) return "Good match! Give it a chance! 🌟";
-    if (score >= 60) return "There's hope! Work on it! 🌈";
-    return "Maybe try being friends first? 🤝";
-}
-// Mouse follower with trail effect
-document.addEventListener('DOMContentLoaded', () => {
-    const heart = document.querySelector('.floating-heart');
-    let mouseX = 0;
-    let mouseY = 0;
-    let heartX = 0;
-    let heartY = 0;
     
-    // Show heart when mouse moves
-    document.addEventListener('mousemove', (e) => {
-        heart.style.display = 'block';
-        mouseX = e.clientX;
-        mouseY = e.clientY;
-        
-        // Create trail effect
-        createTrail(mouseX, mouseY);
+    // Add input validation
+    const inputs = loveForm.querySelectorAll('input');
+    inputs.forEach(input => {
+        input.addEventListener('input', function() {
+            this.value = this.value.replace(/[^a-zA-Z\s]/g, '');
+        });
     });
+}
 
-    function createTrail(x, y) {
-        const trail = document.createElement('div');
-        trail.className = 'heart-trail';
-        trail.innerHTML = '❤️';
-        trail.style.left = (x - 10) + 'px';
-        trail.style.top = (y - 10) + 'px';
-        document.body.appendChild(trail);
+// ===== ACCESSIBILITY FEATURES =====
+function addAccessibilityFeatures() {
+    // Add ARIA labels
+    const inputs = loveForm.querySelectorAll('input');
+    inputs[0].setAttribute('aria-label', 'First person\'s name');
+    inputs[1].setAttribute('aria-label', 'Second person\'s name');
+    
+    // Add keyboard navigation
+    loveForm.addEventListener('keydown', function(event) {
+        if (event.key === 'Enter') {
+            event.preventDefault();
+            handleFormSubmit(event);
+        }
+    });
+}
 
-        // Remove trail after animation
-        setTimeout(() => {
-            trail.remove();
-        }, 1000);
+// ===== PERFORMANCE OPTIMIZATION =====
+function optimizePerformance() {
+    // Throttle animations on mobile
+    if (window.innerWidth <= 768) {
+        const style = document.createElement('style');
+        style.textContent = `
+            .snowflake, .floating-heart {
+                animation-duration: 4s !important;
+            }
+        `;
+        document.head.appendChild(style);
     }
-
-    // Smooth animation function
-    function animate() {
-        // Calculate distance between current heart position and mouse
-        const dx = mouseX - heartX;
-        const dy = mouseY - heartY;
-
-        // Move heart towards mouse with easing
-        heartX += dx * 0.1;
-        heartY += dy * 0.1;
-
-        // Update heart position
-        heart.style.left = `${heartX - 10}px`;
-        heart.style.top = `${heartY - 10}px`;
-
-        // Add rotation based on movement
-        const angle = Math.atan2(dy, dx);
-        const rotation = angle * (180 / Math.PI);
-        const scale = Math.min(Math.max(Math.sqrt(dx * dx + dy * dy) / 100, 0.8), 1.2);
-        
-        heart.style.transform = `rotate(${rotation}deg) scale(${scale})`;
-
-        // Continue animation
-        requestAnimationFrame(animate);
+    
+    // Reduce animation frequency on low-end devices
+    if (navigator.hardwareConcurrency && navigator.hardwareConcurrency < 4) {
+        const style = document.createElement('style');
+        style.textContent = `
+            .snowflake, .floating-heart {
+                display: none;
+            }
+        `;
+        document.head.appendChild(style);
     }
+}
 
-    // Start animation
-    animate();
+// ===== INITIALIZE WHEN DOM IS READY =====
+document.addEventListener('DOMContentLoaded', function() {
+    initLoveCalculator();
+    addAccessibilityFeatures();
+    optimizePerformance();
 });
+
+// ===== EXPORT FOR TESTING =====
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = {
+        calculateLoveScore,
+        displayResult,
+        handleFormSubmit
+    };
+}
