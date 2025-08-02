@@ -1,4 +1,5 @@
 // ===== LOVE CALCULATOR FUNCTIONALITY =====
+// ===== LOVE CALCULATOR FUNCTIONALITY =====
 
 // DOM Elements
 const loveForm = document.getElementById('love-calc-form');
