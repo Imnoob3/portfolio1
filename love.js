@@ -173,7 +173,7 @@ function displayResult(score, name1, name2) {
     resultDiv.innerHTML = `
         <h2>${message}</h2>
         <div id="love-score">${score}%</div>
-        <p>${name1} + ${name2} = Love Score</p>
+        <p>${name1} + ${name2} =${score}%</p>
     `;
     
     resultDiv.classList.remove('hidden');
