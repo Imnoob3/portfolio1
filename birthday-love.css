@@ -1,0 +1,583 @@
+/* Import base styles from love.css */
+@import 'love.css';
+
+/* Birthday Calculator Specific Styles */
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    color: #fff;
+    font-size: 1.1rem;
+    font-weight: 500;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+/* Custom styles for date inputs */
+.form-group input[type="date"] {
+    width: 100%;
+    padding: 15px 25px;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    border-radius: 30px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    color: #fff;
+    font-size: 1.1rem;
+    font-family: 'Poppins', sans-serif;
+    transition: all 0.3s ease;
+}
+
+.form-group input[type="date"]:focus {
+    outline: none;
+    border-color: #ff4b6e;
+    box-shadow: 0 0 20px rgba(255, 75, 110, 0.3);
+}
+
+/* Style the date picker icon */
+input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+    opacity: 0.7;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator:hover {
+    opacity: 1;
+    transform: scale(1.1);
+}
+
+/* Result section styles */
+#result {
+    background: rgba(255, 255, 255, 0.95);
+    padding: 2rem;
+    border-radius: 20px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    margin-top: 2rem;
+    position: relative;
+    z-index: 2;
+}
+
+#result h2 {
+    color: #333;
+    margin-bottom: 1rem;
+}
+
+#love-score {
+    font-size: 4rem;
+    font-weight: bold;
+    background: linear-gradient(45deg, #ff4b6e, #ff8a5c);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin: 1rem 0;
+    text-shadow: none;
+}
+
+#zodiac-compatibility {
+    color: #444;
+    background: rgba(255, 75, 110, 0.1);
+    padding: 1.5rem;
+    border-radius: 15px;
+    margin: 1.5rem 0;
+    font-size: 1.1rem;
+    line-height: 1.6;
+}
+
+/* Center calculate button styles */
+#birthday-calc-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+    width: 100%;
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+#birthday-calc-form button[type="submit"] {
+    padding: 15px 40px;
+    border-radius: 30px;
+    font-size: 1.2rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    margin-top: 1rem;
+}
+
+#birthday-calc-form button[type="submit"]:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+}
+
+.form-group {
+    width: 100%;
+}
+
+/* Heart animation adjustment */
+#heart-animation {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1;
+    opacity: 0.7;
+}
+
+#heart {
+    fill: #ff4b6e;
+    filter: drop-shadow(0 0 10px rgba(255, 75, 110, 0.5));
+}
+
+#line {
+    stroke: #ff4b6e;
+    filter: drop-shadow(0 0 5px rgba(255, 75, 110, 0.3));
+}
+
+/* Share buttons adjustment */
+.share-container {
+    margin-top: 2rem;
+    position: relative;
+    z-index: 3;
+}
+
+.share-buttons {
+    gap: 1rem;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.share-btn {
+    padding: 0.8rem 1.5rem;
+    border-radius: 25px;
+    border: none;
+    color: white;
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.share-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* Loading Animation */
+#loading-animation {
+    text-align: center;
+    margin: 2rem 0;
+}
+
+.loading-heart {
+    font-size: 3rem;
+    color: #ff4b6e;
+    animation: heartbeat 1s infinite;
+}
+
+.loading-text {
+    color: white;
+    margin-top: 1rem;
+    font-size: 1.2rem;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    animation: pulse 2s infinite;
+}
+
+@keyframes heartbeat {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.3); }
+    100% { transform: scale(1); }
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 0.6; }
+    50% { opacity: 1; }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .form-group input[type="date"] {
+        padding: 12px 20px;
+        font-size: 1rem;
+    }
+    
+    #zodiac-compatibility {
+        padding: 1rem;
+        font-size: 1rem;
+    }
+    
+    #birthday-calc-form button[type="submit"] {
+        padding: 12px 30px;
+        font-size: 1rem;
+    }
+}
+
+/* Fix background positioning */
+body {
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+    position: relative;
+    background-attachment: fixed;
+    overflow-x: hidden;
+}
+
+.container {
+    position: relative;
+    z-index: 1;
+    min-height: calc(100vh - 200px); /* Adjust for footer */
+    padding: 2rem 1rem;
+    box-sizing: border-box;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Snow Effect Styles */
+.snow-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+    overflow: hidden;
+}
+
+.snowflake {
+    position: absolute;
+    color: #fff;
+    opacity: 0.8;
+    text-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
+    transition: filter 0.3s ease;
+    pointer-events: none;
+    z-index: 1;
+    will-change: transform;
+}
+
+/* Fix snow container positioning */
+.snow-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.7;
+}
+
+.snowflake {
+    position: absolute;
+    color: #fff;
+    pointer-events: none;
+    z-index: 1;
+    transition: transform 0.1s ease-out;
+    will-change: transform;
+    text-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
+}
+
+@keyframes snowfall {
+    0% {
+        transform: translateY(-10vh);
+    }
+    100% {
+        transform: translateY(100vh);
+    }
+}
+
+.snowflake {
+    animation: snowfall linear infinite;
+}
+
+/* Add glow effect when near mouse */
+.snowflake.near-mouse {
+    filter: brightness(1.5);
+    text-shadow: 0 0 8px rgba(255, 255, 255, 0.8);
+}
+
+/* Fix footer positioning */
+.footer {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    margin-top: 3rem;
+    padding: 2rem 0;
+    backdrop-filter: blur(10px);
+}
+
+.footer-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+
+/* Fix floating elements containment */
+.floating-heart,
+.heart-trail,
+.sparkle {
+    position: fixed;
+    pointer-events: none;
+}
+
+/* Ensure content stays within viewport */
+@media screen and (max-width: 768px) {
+    .container {
+        padding: 1rem;
+        min-height: calc(100vh - 150px);
+    }
+    
+    .footer-content {
+        padding: 0 1rem;
+    }
+}
+
+.hidden {
+    display: none;
+}
+
+.loading-hidden {
+    display: none;
+}
+
+/* Promo Card Styles */
+.promo-card {
+    max-width: 600px;
+    margin: 3rem auto;
+    padding: 2rem;
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    animation: floatIn 0.8s ease-out;
+}
+
+.promo-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+}
+
+.promo-card {
+    position: relative;
+    overflow: hidden;
+    animation: cardPulse 3s infinite;
+}
+
+.promo-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.2),
+        transparent
+    );
+    animation: shine 3s infinite;
+}
+
+.promo-content {
+    position: relative;
+    z-index: 2;
+}
+
+.promo-content h3 {
+    color: #fff;
+    font-size: 1.8rem;
+    margin-bottom: 1rem;
+}
+
+.promo-content p {
+    color: #fff;
+    font-size: 1.1rem;
+    margin: 0.5rem 0;
+}
+
+.promo-features {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    margin: 1.5rem 0;
+    flex-wrap: wrap;
+}
+
+.promo-features span {
+    color: #fff;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: transform 0.3s ease;
+    position: relative;
+    padding: 8px 15px;
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(5px);
+}
+
+.promo-features span:hover {
+    transform: translateY(-5px) scale(1.05);
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.promo-features i {
+    color: #ff4b6e;
+    transition: transform 0.3s ease;
+    animation: iconBeat 1.5s infinite;
+}
+
+.promo-features span:hover i {
+    transform: rotate(15deg);
+}
+
+.promo-button {
+    display: inline-block;
+    padding: 12px 30px;
+    border-radius: 25px;
+    text-decoration: none;
+    color: #fff;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    transition: all 0.3s ease;
+    margin-top: 1rem;
+    position: relative;
+    overflow: hidden;
+    animation: buttonGlow 2s infinite;
+}
+
+.promo-button::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.2),
+        transparent
+    );
+    transition: 0.5s;
+}
+
+.promo-button:hover::after {
+    left: 100%;
+}
+
+.promo-button:hover {
+    letter-spacing: 2px;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+}
+
+/* Animations */
+@keyframes floatIn {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes cardPulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.02); }
+}
+
+@keyframes shine {
+    0% { left: -100%; }
+    20% { left: 100%; }
+    100% { left: 100%; }
+}
+
+@keyframes iconBeat {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+}
+
+@keyframes buttonGlow {
+    0%, 100% { box-shadow: 0 0 5px rgba(255, 255, 255, 0.3); }
+    50% { box-shadow: 0 0 20px rgba(255, 255, 255, 0.5); }
+}
+
+/* Sparkles Effect */
+.promo-content h3::before,
+.promo-content h3::after {
+    content: '✨';
+    position: absolute;
+    animation: sparkleFloat 2s infinite;
+}
+
+.promo-content h3::before {
+    left: -30px;
+    animation-delay: 0s;
+}
+
+.promo-content h3::after {
+    right: -30px;
+    animation-delay: 1s;
+}
+
+@keyframes sparkleFloat {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-10px) rotate(15deg); }
+}
+
+/* Responsive Hover Effects */
+@media (hover: hover) {
+    .promo-features span:hover i {
+        animation: iconSpin 0.5s ease;
+    }
+    
+    .promo-button:hover::before {
+        transform: scaleX(1);
+    }
+}
+
+@keyframes iconSpin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Mobile Animation Optimization */
+@media (max-width: 768px) {
+    .promo-card {
+        animation: cardPulse 4s infinite;
+    }
+    
+    .promo-features span {
+        animation: fadeInUp 0.5s ease-out forwards;
+        opacity: 0;
+    }
+    
+    .promo-features span:nth-child(2) {
+        animation-delay: 0.2s;
+    }
+    
+    .promo-features span:nth-child(3) {
+        animation-delay: 0.4s;
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
